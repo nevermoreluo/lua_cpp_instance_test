@@ -16,7 +16,7 @@ extern "C"
 #include <unistd.h>
 #include <thread>
 #include "lua_engine.h"
-
+#include "testmain.hpp"
 
 
 void work() {
@@ -28,10 +28,21 @@ void work() {
 
 }
 
+class TestStatic {
+
+    static std::string a;
+};
+
+std::string TestStatic::a = "dsdsdsdsdsdsdsdasdadasdasdsadsadadadadaasdadadssdsdsd";
 
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
+//    mainaa();
+
+//    auto testa = std::make_shared<TestStatic>();
+//
+//    std::cout << "size sizeof(std::shared_ptr<LuaInstance>)" << sizeof(std::shared_ptr<LuaInstance>) << " sizeof sizeof(std::shared_ptr<TestInst>)" << sizeof(std::shared_ptr<TestInst>) << std::endl;
     for (int i = 0; i < 10; i++) {
 //        work();
 //        std::this_thread::sleep_for (std::chrono::milliseconds(1000));
@@ -40,7 +51,7 @@ int main() {
     }
 
     // wait thread finished
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::this_thread::sleep_for(std::chrono::seconds(15));
 
     return 0;
 }

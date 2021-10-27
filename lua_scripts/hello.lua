@@ -22,16 +22,16 @@ local function a()
 
 
     local fileContent = read_file("element.json");
-    tLt.a = fileContent;
+--     tLt.a = fileContent;
     local x = cjson.decode(fileContent);
-    tLt.x = x;
+--     tLt.x = x;
 
     cjson.encode(x);
     local xxx = GetTestInstance();
-    xxx.TestStr = fileContent;
+--     xxx.TestStr = fileContent;
 
-    local xxa = GetTestInstance();
-        xxa.TestStr = "fileContent";
+--     local xxa = GetTestInstance();
+--         xxa.TestStr = "fileContent";
 --     print(xxx.TestStr);
 
 end

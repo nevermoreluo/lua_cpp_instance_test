@@ -117,34 +117,58 @@ std::shared_ptr<LuaInstance> LuaInstance::checkInstance(lua_State *L, int index,
         }
     }
 
-    if (lua_istable(L, index))
+    if (lua_isuserdata(L, index))
     {
-        lua_pushstring(L, LUA_CPP_USER_DATA_KEY);
-        lua_rawget(L, index);
-        if (lua_isuserdata(L, lua_gettop(L)))
-        {
-            std::vector <std::string> existing = ClassFactory::getRegisteredClasses();
-            unsigned size = existing.size();
-            void *udata = lua_touserdata(L, lua_gettop(L));
-            int meta = lua_getmetatable(L, index);
-            if (meta != 0)
-            {
-                for (unsigned i = 0; i < size; i++)
-                {
-                    std::string name = "luaL_Instance_" + existing[i];
-                    luaL_getmetatable(L, name.c_str());
-                    if (lua_rawequal(L, -1, -2))
-                    {
-                        lua_pop(L, 3);
-                        return (*static_cast<std::shared_ptr <LuaInstance> *>(udata));
-                    }
-                    lua_pop(L, 1);
-                }
-            }
-        }
-        // pop userdata and index string
-        lua_pop(L, 2);
+//        std::vector <std::string> existing = ClassFactory::getRegisteredClasses();
+//        unsigned size = existing.size();
+        void *udata = lua_touserdata(L, lua_gettop(L));
+        return (*static_cast<std::shared_ptr <LuaInstance> *>(udata));
+//        int meta = lua_getmetatable(L, index);
+//        if (meta != 0)
+//        {
+//            for (unsigned i = 0; i < size; i++)
+//            {
+//                std::string name = "luaL_Instance_" + existing[i];
+//                luaL_getmetatable(L, name.c_str());
+//                if (lua_rawequal(L, -1, -2))
+//                {
+//                    lua_pop(L, 3);
+//                    return (*static_cast<std::shared_ptr <LuaInstance> *>(udata));
+//                }
+//                lua_pop(L, 1);
+//            }
+//        }
     }
+
+
+//    if (lua_istable(L, index))
+//    {
+//        lua_pushstring(L, LUA_CPP_USER_DATA_KEY);
+//        lua_rawget(L, index);
+//        if (lua_isuserdata(L, lua_gettop(L)))
+//        {
+//            std::vector <std::string> existing = ClassFactory::getRegisteredClasses();
+//            unsigned size = existing.size();
+//            void *udata = lua_touserdata(L, lua_gettop(L));
+//            int meta = lua_getmetatable(L, index);
+//            if (meta != 0)
+//            {
+//                for (unsigned i = 0; i < size; i++)
+//                {
+//                    std::string name = "luaL_Instance_" + existing[i];
+//                    luaL_getmetatable(L, name.c_str());
+//                    if (lua_rawequal(L, -1, -2))
+//                    {
+//                        lua_pop(L, 3);
+//                        return (*static_cast<std::shared_ptr <LuaInstance> *>(udata));
+//                    }
+//                    lua_pop(L, 1);
+//                }
+//            }
+//        }
+//        // pop userdata and index string
+//        lua_pop(L, 2);
+//    }
     return nullptr;
 }
 
@@ -332,21 +356,24 @@ void LuaInstance::register_lua_events(lua_State *L){
 
 
 int LuaInstance::wrap_lua(lua_State *L){
-    lua_newtable(L);
-
-    lua_pushstring(L, LUA_CPP_USER_DATA_KEY);
+//    lua_newtable(L);
+//
+//    lua_pushstring(L, LUA_CPP_USER_DATA_KEY);
     std::shared_ptr <LuaInstance> shared_this = std::enable_shared_from_this<LuaInstance>::shared_from_this();
 
-    void* ud = lua_newuserdata(L, sizeof(std::shared_ptr <
-            LuaInstance > ));
-    std::shared_ptr <LuaInstance> *udata = static_cast<std::shared_ptr <LuaInstance> *>(ud);
-    *static_cast<std::shared_ptr <LuaInstance>**>(ud) = udata;
-    new(udata) std::shared_ptr<LuaInstance>(shared_this);
-    lua_rawset(L, -3);
+//    void* ud = lua_newuserdata(L, sizeof(std::shared_ptr <
+//            LuaInstance > ));
+//    std::shared_ptr <LuaInstance> *udata = static_cast<std::shared_ptr <LuaInstance> *>(ud);
+//    *static_cast<std::shared_ptr <LuaInstance>**>(ud) = udata;
+//    new(udata) std::shared_ptr<LuaInstance>(shared_this);
 
-    lua_pushstring(L, LUA_CPP_LUA_CLASS_KEY);
-    lua_pushstring(L, getLuaClassName().c_str());
-    lua_rawset(L, -3);
+    void * ud = lua_newuserdata(L, sizeof(std::shared_ptr<LuaInstance>));
+    new(ud) std::shared_ptr<LuaInstance>(shared_this);
+//    lua_rawset(L, -3);
+
+//    lua_pushstring(L, LUA_CPP_LUA_CLASS_KEY);
+//    lua_pushstring(L, getLuaClassName().c_str());
+//    lua_rawset(L, -3);
 
     luaL_getmetatable(L, getLuaClassName().c_str());
     lua_setmetatable(L, -2);
@@ -359,6 +386,6 @@ int LuaInstance::lua_gc(lua_State *L){
     if (nullptr != inst) {
         inst.reset();
     }
-    lua_remove(L, 1);
+//    lua_remove(L, 1);
     return 0;
 }
