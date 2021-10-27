@@ -34,7 +34,6 @@ using luaRegisterFunc = void (*)(lua_State *L);
 #define DECLARE_CLASS(Class_Name) \
     virtual std::string getClassName(); \
     virtual std::string getLuaClassName(); \
-    static ClassMetadata* _tq_classmetadata; \
     static void registerClass(); \
     static void _tq_init(LuaEngine* eng);          \
 protected: \
@@ -50,8 +49,6 @@ protected: \
     std::string Class_Name::getLuaClassName(){ \
         return LuaClassName; \
     } \
-    ClassMetadata* Class_Name::_tq_classmetadata = nullptr; \
-    void Class_Name::registerClass(){ _tq_classmetadata = new Class_Name##_ClassMetadata; } \
     void Class_Name::_tq_init(LuaEngine* eng)
 
 #define DEFINE_CLASS(Class_Name) \
@@ -82,8 +79,6 @@ protected: \
     std::string Class_Name::getLuaClassName(){ \
         return LuaClassName; \
     } \
-    ClassMetadata* Class_Name::_tq_classmetadata = nullptr; \
-    void Class_Name::registerClass(){ _tq_classmetadata = new Class_Name##_ClassMetadata; } \
     void Class_Name::_tq_init(LuaEngine* eng)
 
 #define DEFINE_CLASS_ABS(Class_Name) \
@@ -138,7 +133,6 @@ public:
     static void register_lua_events(lua_State *L);
 
     int wrap_lua(lua_State *L);
-    virtual void clearClassMetadata() { _tq_classmetadata = nullptr;}
 
     std::string className;
     LuaEngine* eng = nullptr;
@@ -146,7 +140,6 @@ public:
 
     virtual std::string getClassName();
     virtual std::string getLuaClassName();
-    static ClassMetadata* _tq_classmetadata;
     static void registerClass();
     static void _tq_init(LuaEngine* eng);
     static std::string ClassName;

@@ -50,8 +50,6 @@ void ClassFactory::registerCoreClasses()
     }
     isInitialized = true;
 
-    LuaInstance::registerClass();
-
 
     // TODO handler event
 //#if HAVE_ENET

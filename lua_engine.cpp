@@ -45,8 +45,6 @@ std::string TestInst::getLuaClassName(){
     return LuaClassName;
 }
 
-ClassMetadata* TestInst::_tq_classmetadata = nullptr;
-void TestInst::registerClass(){ _tq_classmetadata = new TestInst_ClassMetadata; }
 void TestInst::_tq_init(LuaEngine* eng) {
     registerLuaClass(eng, LuaClassName, register_lua_metamethods, register_lua_methods, register_lua_property_getters,
          register_lua_property_setters, register_lua_events
@@ -136,7 +134,6 @@ LuaEngine::~LuaEngine() {
 
 void LuaEngine::init() {
     ClassFactory::registerCoreClasses();
-    TestInst::registerClass();
     ClassFactory::initClasses(this);
     LuaType::_tq_init(this);
     L->userdata = this;

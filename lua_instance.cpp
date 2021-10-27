@@ -35,8 +35,6 @@ return ClassName;
 std::string LuaInstance::getLuaClassName(){
 return LuaClassName;
 }
-ClassMetadata* LuaInstance::_tq_classmetadata = nullptr;
-void LuaInstance::registerClass(){ _tq_classmetadata = new LuaInstance_ClassMetadata; }
 void LuaInstance::_tq_init(LuaEngine* eng) {
 registerLuaClass(eng, LuaClassName,
                  register_lua_metamethods,
@@ -66,7 +64,6 @@ LuaInstance::LuaInstance(LuaEngine* _eng)
 
 LuaInstance::~LuaInstance()
 {
-    clearClassMetadata();
 }
 
 
