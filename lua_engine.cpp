@@ -21,12 +21,44 @@ int addLuaCPath(lua_State* m_pLuaState, const char* path)
 }
 
 
-DEFINE_CLASS(TestInst)
-{
-registerLuaClass(eng, LuaClassName, register_lua_metamethods, register_lua_methods, register_lua_property_getters,
-        register_lua_property_setters, register_lua_events
-);
+class TestInst_ClassMetadata: public ClassMetadata{
+public:
+    TestInst_ClassMetadata(){
+        ClassFactory::addClass("TQTestInst", this);
+    }
+    virtual std::shared_ptr<LuaInstance> newInstance(LuaEngine* eng){
+        return std::make_shared<TestInst>(eng);
+    }
+    virtual std::string getClassName(){
+        return "TQTestInst";
+    }
+    virtual InstanceInitFnc getInitFunc(){
+        return TestInst::_tq_init;
+    }
+};
+std::string TestInst::ClassName = "TQTestInst" ;
+std::string TestInst::LuaClassName = "luaL_Instance_TQTestInst" ;
+std::string TestInst::getClassName(){
+return ClassName;
 }
+std::string TestInst::getLuaClassName(){
+    return LuaClassName;
+}
+
+ClassMetadata* TestInst::_tq_classmetadata = nullptr;
+void TestInst::registerClass(){ _tq_classmetadata = new TestInst_ClassMetadata; }
+void TestInst::_tq_init(LuaEngine* eng) {
+    registerLuaClass(eng, LuaClassName, register_lua_metamethods, register_lua_methods, register_lua_property_getters,
+         register_lua_property_setters, register_lua_events
+ );
+}
+
+//DEFINE_CLASS(TestInst)
+//{
+//registerLuaClass(eng, LuaClassName, register_lua_metamethods, register_lua_methods, register_lua_property_getters,
+//        register_lua_property_setters, register_lua_events
+//);
+//}
 
 TestInst::TestInst(LuaEngine *servicePtr) :LuaInstance(servicePtr)
 {

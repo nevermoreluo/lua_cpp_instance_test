@@ -13,17 +13,50 @@
 #define LUA_CPP_LUA_CLASS_KEY "_cpp_lua_type"
 #endif
 
-
-DEFINE_CLASS_ABS(LuaInstance)
-{
-    registerLuaClass(eng, LuaClassName,
-                     register_lua_metamethods,
-                     register_lua_methods,
-                     register_lua_property_getters,
-                     register_lua_property_setters,
-                     register_lua_events
-    );
+class LuaInstance_ClassMetadata: public ClassMetadata{
+public:
+    LuaInstance_ClassMetadata(){
 }
+virtual std::shared_ptr<LuaInstance> newInstance(LuaEngine* eng){
+return nullptr;
+}
+virtual std::string getClassName(){
+        return "TQLuaInstance" ;
+}
+virtual InstanceInitFnc getInitFunc(){
+        return LuaInstance::_tq_init;
+}
+};
+std::string LuaInstance::ClassName = "TQLuaInstance" ;
+std::string LuaInstance::LuaClassName = "luaL_Instance_TQLuaInstance" ;
+std::string LuaInstance::getClassName(){
+return ClassName;
+}
+std::string LuaInstance::getLuaClassName(){
+return LuaClassName;
+}
+ClassMetadata* LuaInstance::_tq_classmetadata = nullptr;
+void LuaInstance::registerClass(){ _tq_classmetadata = new LuaInstance_ClassMetadata; }
+void LuaInstance::_tq_init(LuaEngine* eng) {
+registerLuaClass(eng, LuaClassName,
+                 register_lua_metamethods,
+                 register_lua_methods,
+                 register_lua_property_getters,
+                 register_lua_property_setters,
+                 register_lua_events
+                 );
+}
+
+//DEFINE_CLASS_ABS(LuaInstance)
+//{
+//    registerLuaClass(eng, LuaClassName,
+//                     register_lua_metamethods,
+//                     register_lua_methods,
+//                     register_lua_property_getters,
+//                     register_lua_property_setters,
+//                     register_lua_events
+//    );
+//}
 
 
 LuaInstance::LuaInstance(LuaEngine* _eng)
